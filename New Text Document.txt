@@ -1,0 +1,77 @@
+ <form [formGroup]="questionForm" (ngSubmit)="submitForm()">
+  <p>
+    <label for="name">Name </label>
+    <input type="text" id="name" name="name" formControlName="name">
+  </p>
+
+  <p>
+    <label for="questionLevel">Question Level </label>
+    <select required id="questionLevel" class="form-control form-select" formControlName="questionLevel">
+      <option value = 1>
+        1
+      </option>
+      <option value = 2>
+        2
+      </option>
+      <option value = 3>
+        3
+      </option>
+      <option value = 4>
+        4
+      </option>
+      <option value = 5>
+        5
+      </option>
+    </select>
+  </p>
+
+  <p>
+    <label for="marks">Marks </label>
+    <input type="text" id="marks" name="marks" formControlName="marks">
+  </p>
+
+  <p>
+    <label for="questionTypeId">Question Type </label>
+    <select required id="questionTypeId" class="form-control form-select" formControlName="questionTypeId">
+      <option *ngFor="let questionType of questionTypes" [value]="questionType.Id">
+          {{questionType.Name}}
+      </option>
+    </select>
+  </p>
+
+  <div>
+    <button type="button" (click)="switch()">Switch</button>
+  </div>
+
+  <button *ngIf="chosenType" type="button" (click)="addAnswer()">Add</button>
+
+  
+  <button type="submit" [disabled]="questionForm.get('answers')?.invalid">Submit</button>
+  
+  <div *ngIf="chosenType;else trueOrFalse">
+    <div *ngFor="let answer of answers.controls; let i=index">
+      <div>
+        <div formArrayName="answers">
+          <div [formGroupName]="i">
+            Name :
+            <input name="name" type="text" [id]="'name' + i" formControlName="name">
+          </div>
+        </div>
+        <input name="correctAnswer" type="radio" formControlName="correctAnswer" [value]="i">
+
+        <button *ngIf="this.answers.length > 2" (click)="removeAnswer(i)">Remove</button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #trueOrFalse>
+    <div class="radio-inline">
+      True
+      <input name="correctAnswer" type="radio" formControlName="correctAnswer" selected [value]="true">
+      
+      False
+      <input name="correctAnswer" type="radio" formControlName="correctAnswer" [value]="false">
+    </div>
+  </ng-template>
+
+</form>
